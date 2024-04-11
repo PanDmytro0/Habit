@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Habit</string>
+    <string name="startButtonStart">Start using app</string>
+    <string name="privacyPolicyButton">Our privacy policy</string>
+    <string name="deleteHabitButton">Delete</string>
+    <string name="textInputHint">Text</string>
+    <string name="openDatePickerButton">Open date picker</string>
+    <string name="openTimePickerButton">Open time picker</string>
+    <string name="addTheHabitButton">Add habit</string>
+    <string name="chooseImageButton">Choose image</string>
 </resources>

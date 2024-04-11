@@ -11,14 +11,15 @@ class DBHelper(context: Context?) :
 
     override fun onCreate(db: SQLiteDatabase) {
         val queryReminders =
-            "CREATE TABLE reminders (id INTEGER PRIMARY KEY, title TEXT, time TEXT, requestCode INTEGER)"
+            "CREATE TABLE reminders (id INTEGER PRIMARY KEY, title TEXT, time TEXT, requestCode INTEGER, photo BLOB)"
         db.execSQL(queryReminders)
     }
 
     fun addNewReminder(
         title: String?,
         time: String?,
-        requestCode: Int?
+        requestCode: Int?,
+        photo: ByteArray?
     ) {
         try {
             this.writableDatabase.use { db ->
@@ -26,6 +27,7 @@ class DBHelper(context: Context?) :
                 values.put("title", title)
                 values.put("time", time)
                 values.put("requestCode", requestCode)
+                values.put("photo", photo)
                 db.insert("reminders", null, values)
             }
         } catch (e: Exception) {
@@ -33,21 +35,22 @@ class DBHelper(context: Context?) :
         }
     }
 
-    fun getAllRemindersByCategory(desiredCategory: String): List<Reminder> {
+    fun getAllReminders(): List<Reminder> {
         val reminders: MutableList<Reminder> = ArrayList()
         try {
             this.readableDatabase.use { db ->
-                val query = "SELECT * FROM reminders WHERE category = ?"
+                val query = "SELECT * FROM reminders"
                 try {
-                    db.rawQuery(query, arrayOf(desiredCategory)).use { cursor ->
+                    db.rawQuery(query, null).use { cursor ->
                         if (cursor != null && cursor.moveToFirst()) {
                             do {
                                 val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
                                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
                                 val time = cursor.getString(cursor.getColumnIndexOrThrow("time"))
                                 val requestCode = cursor.getInt(cursor.getColumnIndexOrThrow("requestCode"))
+                                val photo = cursor.getBlob(cursor.getColumnIndexOrThrow("photo"))
 
-                                val reminder = Reminder(id, title, time, requestCode)
+                                val reminder = Reminder(id, title, time, requestCode, photo)
                                 reminders.add(reminder)
                             } while (cursor.moveToNext())
                         }
@@ -62,7 +65,7 @@ class DBHelper(context: Context?) :
         return reminders
     }
 
-    fun deleteReminderById(reminderId: Int?) {
+    fun deleteHabitById(reminderId: Int?) {
         try {
             this.writableDatabase.use { db ->
                 val whereClause = "id = ?"
@@ -73,7 +76,6 @@ class DBHelper(context: Context?) :
             e.printStackTrace()
         }
     }
-
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS reminders")
@@ -92,5 +94,6 @@ data class Reminder(
     val id: Int?,
     val title: String?,
     val time: String?,
-    val requestCode: Int?
+    val requestCode: Int?,
+    val photo: ByteArray?
 )
