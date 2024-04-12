@@ -2,12 +2,13 @@ package com.fernfog.habit
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.CursorWindow
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.util.*
 
 class DBHelper(context: Context?) :
-    SQLiteOpenHelper(context, "reminderDatabase", null, 1) {
+    SQLiteOpenHelper(context, "reminderDatabase", null, 3) {
 
     override fun onCreate(db: SQLiteDatabase) {
         val queryReminders =
