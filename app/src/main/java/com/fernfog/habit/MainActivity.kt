@@ -41,19 +41,11 @@ class MainActivity : AppCompatActivity() {
 
         for (reminder in allHabits) {
 
-            adapter.addFragment(HabitFragment())
+            var habitFragment = HabitFragment(reminder, adapter)
+
+            adapter.addFragment(habitFragment)
 
         }
-
-
-    }
-
-    fun cancelAlarm(context: Context?, requestCode: Int) {
-        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, MyReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        alarmManager.cancel(pendingIntent)
     }
 
     fun getHexColor(context: Context, colorResourceId: Int): String {
